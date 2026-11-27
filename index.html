@@ -223,9 +223,46 @@ footer { padding-block: 40px 64px; color: var(--muted); font-size: 12px; font-fa
   .pic { transition: none; }
   .role .caret, .facts dd.ok::before, .contact-box::before { animation: none; }
 }
+
+/* ===== v2 premium layer ===== */
+#loader{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:#06070c;transition:clip-path 1.1s cubic-bezier(.76,0,.24,1) .15s;clip-path:inset(0 0 0 0)}
+#loader.done{clip-path:inset(0 0 100% 0);pointer-events:none}
+#loader .ld{text-align:center;transition:opacity .4s}
+#loader.done .ld{opacity:0}
+#loader .num{font-family:var(--font-display);font-weight:700;font-size:clamp(4rem,18vw,10rem);letter-spacing:-.06em;line-height:1;font-variant-numeric:tabular-nums;background:linear-gradient(100deg,var(--accent),var(--cool));-webkit-background-clip:text;background-clip:text;color:transparent}
+#loader .cap{font-family:var(--font-mono);font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+#loader .ln{width:min(260px,60vw);height:2px;background:var(--line);margin:22px auto 0;overflow:hidden;border-radius:2px}
+#loader .ln i{display:block;height:100%;width:100%;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,var(--cool),var(--accent))}
+body.loading{overflow:hidden}
+.aurora{position:fixed;inset:-20%;z-index:0;pointer-events:none;opacity:.5;filter:blur(70px);background:radial-gradient(40% 35% at 20% 25%,rgba(124,156,255,.28),transparent 70%),radial-gradient(35% 30% at 80% 70%,rgba(255,122,156,.18),transparent 70%),radial-gradient(30% 30% at 60% 20%,rgba(110,231,183,.12),transparent 70%);animation:aur 18s ease-in-out infinite alternate}
+@keyframes aur{to{transform:translate3d(4%,-3%,0) rotate(6deg) scale(1.1)}}
+main{perspective:1400px}
+.rev{transform:translateY(60px) rotateX(16deg) scale(.96);transform-origin:50% 100%;filter:blur(8px);transition:transform 1.1s cubic-bezier(.2,.8,.2,1),filter 1s;transition-delay:calc(var(--d,0)*100ms)}
+.rev.in{transform:none;filter:none}
+.sec-n{position:absolute;right:0;top:40px;font-family:var(--font-display);font-weight:700;font-size:clamp(6rem,20vw,16rem);line-height:1;letter-spacing:-.06em;color:transparent;-webkit-text-stroke:1px rgba(160,175,255,.16);pointer-events:none;user-select:none;will-change:transform;z-index:-1}
+section{position:relative}
+.shine{background:linear-gradient(110deg,var(--fg) 30%,var(--accent) 50%,var(--fg) 70%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 5s linear infinite}
+@keyframes shine{to{background-position:-250% 0}}
+.marquee.two{border-top:0}
+.marquee.two .track{animation-direction:reverse;animation-duration:48s}
+.marquee.two .track span{color:transparent;-webkit-text-stroke:1px rgba(160,175,255,.4);font-size:clamp(2rem,6vw,4rem);font-weight:700}
+.marquee.two .track span i{-webkit-text-stroke:0;color:var(--accent)}
+.card{box-shadow:0 30px 60px -30px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.06)}
+.job{transition:transform .4s cubic-bezier(.2,.8,.2,1),border-color .3s}
+.job:hover{transform:translateX(8px);border-color:var(--accent)}
+.scrollhint{display:flex;align-items:center;gap:12px;margin-top:48px;font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.scrollhint i{display:block;width:22px;height:36px;border:1.5px solid var(--line);border-radius:12px;position:relative}
+.scrollhint i::after{content:"";position:absolute;left:50%;top:7px;width:3px;height:7px;margin-left:-1.5px;border-radius:2px;background:var(--accent);animation:wheel 1.8s ease-in-out infinite}
+@keyframes wheel{0%{transform:translateY(0);opacity:1}80%{transform:translateY(12px);opacity:0}100%{opacity:0}}
+.skill .chips span{transition:transform .25s,background .25s,color .25s}
+.skill .chips span:hover{transform:translateY(-3px) scale(1.06);background:var(--accent);color:#150f03}
+@media (max-width:760px){.sec-n{font-size:6rem;top:20px}.scrollhint{display:none}.aurora{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.rev{filter:none;transform:none}.aurora,.shine{animation:none}#loader{display:none}}
 </style>
 </head>
-<body>
+<body class="loading">
+<div id="loader" aria-hidden="true"><div class="ld"><div class="num"><span id="ldn">0</span>%</div><div class="cap">Loading portfolio</div><div class="ln"><i id="ldl"></i></div></div></div>
+<div class="aurora" aria-hidden="true"></div>
 
 
 <canvas id="scene" aria-hidden="true"></canvas>
@@ -250,6 +287,7 @@ footer { padding-block: 40px 64px; color: var(--muted); font-size: 12px; font-fa
         <a class="btn primary magnet" href="#experience">See my experience <span aria-hidden="true">→</span></a>
         <a class="btn magnet" href="#contact">Get in touch</a>
       </div>
+      <div class="scrollhint fade" style="--d:5"><i></i>Scroll to explore</div>
       <div class="stats fade" style="--d:4">
         <div><b><span data-count="4.5" data-dec="1">4.5</span>+</b><span>Years experience</span></div>
         <div><b><span data-count="40">40</span>+</b><span>API endpoints</span></div>
@@ -260,6 +298,7 @@ footer { padding-block: 40px 64px; color: var(--muted); font-size: 12px; font-fa
   </section>
 
   <section id="about" data-accent="#7cc4ff">
+    <span class="sec-n" aria-hidden="true" data-par="1">02</span>
     <p class="eyebrow rev">About</p>
     <h2 class="rev" style="--d:1">Secure, scalable and built to last.</h2>
     <div class="about">
@@ -286,6 +325,7 @@ footer { padding-block: 40px 64px; color: var(--muted); font-size: 12px; font-fa
   </section>
 
   <section id="impact" data-accent="#ff7a9c">
+    <span class="sec-n" aria-hidden="true" data-par="1">03</span>
     <p class="eyebrow rev">Impact</p>
     <h2 class="rev" style="--d:1">What I've delivered.</h2>
     <div class="impact">
@@ -321,6 +361,7 @@ footer { padding-block: 40px 64px; color: var(--muted); font-size: 12px; font-fa
   </section>
 
   <section id="experience" data-accent="#b69cff">
+    <span class="sec-n" aria-hidden="true" data-par="1">04</span>
     <p class="eyebrow rev">Experience</p>
     <h2 class="rev" style="--d:1">Where I've worked.</h2>
     <div class="tl" id="tl">
@@ -351,6 +392,7 @@ footer { padding-block: 40px 64px; color: var(--muted); font-size: 12px; font-fa
   </section>
 
   <section id="skills" data-accent="#6ee7b7">
+    <span class="sec-n" aria-hidden="true" data-par="1">05</span>
     <p class="eyebrow rev">Technical skills</p>
     <h2 class="rev" style="--d:1">My toolkit.</h2>
     <div class="skills">
@@ -367,8 +409,9 @@ footer { padding-block: 40px 64px; color: var(--muted); font-size: 12px; font-fa
   </section>
 
   <section id="contact" data-accent="#ffb454">
+    <span class="sec-n" aria-hidden="true" data-par="1">06</span>
     <p class="eyebrow rev">Contact</p>
-    <h2 class="rev" style="--d:1">Let's build something.</h2>
+    <h2 class="rev shine" style="--d:1">Let's build something.</h2>
     <div class="contact-box glass rev" style="--d:2">
       <p class="s">Have a project, a role or a question? Reach out and I'll get back to you soon.</p>
       <div class="row"><code id="mail">prajwalingole280@gmail.com</code><button class="btn magnet" type="button" data-copy="mail">Copy email</button></div>
@@ -389,6 +432,11 @@ footer { padding-block: 40px 64px; color: var(--muted); font-size: 12px; font-fa
     </div>
   </div>
 </div>
+
+<div class="marquee two" aria-hidden="true"><div class="track">
+      <span>Full Stack<i>✦</i></span><span>Clean Code<i>✦</i></span><span>Scalable APIs<i>✦</i></span><span>Secure by design<i>✦</i></span><span>Fast queries<i>✦</i></span><span>Agile teams<i>✦</i></span>
+      <span>Full Stack<i>✦</i></span><span>Clean Code<i>✦</i></span><span>Scalable APIs<i>✦</i></span><span>Secure by design<i>✦</i></span><span>Fast queries<i>✦</i></span><span>Agile teams<i>✦</i></span>
+    </div></div>
 
 <footer><span>© 2026 Prajwal Ingole</span><span>Nagpur, India</span></footer>
 
@@ -517,6 +565,17 @@ footer { padding-block: 40px 64px; color: var(--muted); font-size: 12px; font-fa
     });
     document.addEventListener("pointerover", function (e) { ring.classList.toggle("big", !!e.target.closest("a, button, .tilt, .portrait")); });
   }
+
+  /* ---- preloader ---- */
+  (function(){
+    var L=document.getElementById("loader"),n=document.getElementById("ldn"),l=document.getElementById("ldl"),t0=performance.now(),dur=1600;
+    function fin(){L.classList.add("done");document.body.classList.remove("loading");setTimeout(function(){L.style.display="none"},1500);}
+    if(reduce){fin();return;}
+    (function st(t){var p=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-p,3);n.textContent=Math.round(e*100);l.style.transform="scaleX("+e+")";if(p<1)requestAnimationFrame(st);else setTimeout(fin,250);})(t0);
+  })();
+  var pars=[].slice.call(document.querySelectorAll("[data-par]"));
+  function numPar(){pars.forEach(function(el){var r=el.parentNode.getBoundingClientRect();el.style.transform="translateY("+((r.top+r.height/2-window.innerHeight/2)*-0.18).toFixed(1)+"px)";});}
+  if(!reduce){window.addEventListener("scroll",numPar,{passive:true});numPar();}
 
   /* ---- UI loop ---- */
   var glow = document.getElementById("glow"), bar = document.getElementById("bar"), tl = document.getElementById("tl"), skew = document.querySelector(".skew");
@@ -719,6 +778,20 @@ footer { padding-block: 40px 64px; color: var(--muted); font-size: 12px; font-fa
   var points = new THREE.Points(pg, new THREE.PointsMaterial({ size: 0.12, map: soft, vertexColors: true, transparent: true, opacity: 0.85, depthWrite: false, blending: THREE.AdditiveBlending }));
   scene.add(points);
 
+  /* cursor-following light + click shockwave */
+  var shock = 0;
+  window.addEventListener("pointerdown", function () { shock = 1; });
+  var cur3 = new THREE.PointLight(0xffffff, 1.6, 18); scene.add(cur3);
+  var GN = window.innerWidth < 900 ? 1200 : 3200, gp = new Float32Array(GN * 3), gc = new Float32Array(GN * 3), ca = new THREE.Color(0xffb454), cb = new THREE.Color(0x86a5ff);
+  for (var q = 0; q < GN; q++) {
+    var rad = Math.pow(Math.random(), 0.6) * 9, ang = rad * 1.1 + (q % 3) * 2.094, sp2 = (Math.random() - 0.5) * 0.9 * (1 + rad * 0.15);
+    gp[q*3] = Math.cos(ang) * rad + sp2; gp[q*3+1] = (Math.random() - 0.5) * 0.9 * (1 + rad * 0.1); gp[q*3+2] = Math.sin(ang) * rad + sp2;
+    var cc = ca.clone().lerp(cb, rad / 9); gc[q*3] = cc.r; gc[q*3+1] = cc.g; gc[q*3+2] = cc.b;
+  }
+  var gg = new THREE.BufferGeometry(); gg.setAttribute("position", new THREE.BufferAttribute(gp, 3)); gg.setAttribute("color", new THREE.BufferAttribute(gc, 3));
+  var galaxy = new THREE.Points(gg, new THREE.PointsMaterial({ size: 0.09, map: soft, vertexColors: true, transparent: true, opacity: 0.8, depthWrite: false, blending: THREE.AdditiveBlending }));
+  galaxy.rotation.x = 0.9; orb.add(galaxy);
+
   var narrow = false;
   function resize() {
     var w = window.innerWidth, h = window.innerHeight;
@@ -758,10 +831,14 @@ footer { padding-block: 40px 64px; color: var(--muted); font-size: 12px; font-fa
     var ox = Math.max(-halfW * 0.55, Math.min(halfW * 0.55, L[0]));
     oc.x += (ox - oc.x) * 0.04; oc.y += (L[1] - oc.y) * 0.04; oc.s += (L[2] - oc.s) * 0.04;
     orb.position.set(lookX + oc.x, lookY + oc.y, -1);
-    orb.scale.setScalar(oc.s);
+    shock *= 0.93;
+    orb.scale.setScalar(oc.s * (1 + shock * 0.18));
+    galaxy.rotation.y = t * 0.05 * k; galaxy.rotation.z = Math.sin(t * 0.1) * 0.15;
+    cur3.position.set(lookX + mx * 7, lookY - my * 4, 4);
+    cur3.color.copy(col3);
     orb.rotation.y = t * 0.12 * k + mx * 0.6; orb.rotation.x = my * 0.3;
     uni.uTime.value = t * k;
-    var ampT = 0.22 + Math.min(0.45, Math.abs(vel) * 0.02) + msp * 0.35;
+    var ampT = 0.22 + Math.min(0.45, Math.abs(vel) * 0.02) + msp * 0.35 + shock * 0.7;
     uni.uAmp.value += (ampT - uni.uAmp.value) * 0.08;
 
     tags.forEach(function (g) {
